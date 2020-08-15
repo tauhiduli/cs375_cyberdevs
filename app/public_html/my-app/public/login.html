@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Login</title>
+            <style type="text/css">
+            </style>
+        </head>
+        <body>
+            <h1>Login</h1>
+            <form>
+                <div id="login">
+                    <p>Username<input type="text" id="userId" name="userId"></p>
+                    <p>Password<input type="password" id="password" name="password"></p>
+                </div>
+                <div>
+                    <input type="button" id="loginButton" value="Login">
+                    <input type="reset" id="resetButton" value="Reset">
+                </div>
+            </form>
+            <script type="text/javascript">
+                function checkLogin() {
+                    idInput = document.getElementById("userId");
+                    passwordInput = document.getElementById("password");
+                    let found = false;
+                    if (idInput.value === "" || passwordInput.value === "") {
+                        alert("Please fill in both areas")
+                    }
+                    else {
+                        for (let i = 0; i < data.length; i++) { //checks the database containing all users
+                            if (idInput.value === data[i].userid && passwordInput.value === data[i].userid.password) { 
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            window.open(); //opens *page when login information found
+                        }
+                        else {
+                            alert("Error: Incorrect Username or Password")
+                        }
+                    }
+                }
+
+                loginButton = document.getElementById("loginButton");
+                loginButton.addEventListener("click", checkLogin);
+            </script>
+        </body>
+    </html>
