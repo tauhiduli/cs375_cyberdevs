@@ -2,7 +2,7 @@ const mysql = require("mysql");
 const express = require("express");
 const app = express();
 
-const port = 9000;
+const port = 5000;
 const hostname = "localhost";
 
 /* 
@@ -10,8 +10,6 @@ const hostname = "localhost";
  * and change the password to whatever you set it as.
  */
 const env = require("../env.json");
-
-//app.use(express.static("public_html"));
 
 const con = mysql.createConnection({
 	host: env.hostname,
