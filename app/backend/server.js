@@ -1,3 +1,5 @@
+import data from "./data"
+
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const express = require("express");
@@ -10,11 +12,24 @@ const hostname = "localhost";
  * For the env file, change your user if it is not root
  * and change the password to whatever you set it as.
  */
+app.get("/api/products/:id",(req,res)=>{
+	const productId=req.params.id
+	const product = data.products.find(x=>x._id === productId)
+	if(product){
+		res.send(product)
+	}else{
+		res.status(404).send({msg:"Product Not Found"})
+	}
+})
+ app.get("/api/products",(req,res)=>{
+	 res.send(data.products);
+ })
+
 const env = require("../env.json");
 app.use(express.json());
 
 const con = mysql.createConnection({
-	host: env.hostname,
+	host: env.host,
 	user: env.user,
 	password: env.password,
 	database: env.database,
@@ -22,12 +37,14 @@ const con = mysql.createConnection({
 
 con.connect(function(error) {
 	if (error) {
+		console.log("asdfasdfadadf")
 		console.log("Error: ", error);
 	}
 	else {
 		console.log("Connected to database!");
 	}
 });
+<<<<<<< HEAD
 
 app.post("/auth", function (req, res) {
     let email = req.body.email;
@@ -70,6 +87,9 @@ app.post("/auth", function (req, res) {
         // })
 });
 
+=======
+
+>>>>>>> ff9b81f079aee4160cb2738cfc7b0a8f53d705f4
 app.listen(port, hostname, () => {
     console.log(`Listening at: http://${hostname}:${port}`);
 });
