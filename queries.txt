@@ -1,0 +1,10 @@
+The following are queries that are required for the website to be operational:
+
+CREATE DATABASE dragonshop;
+CREATE TABLE users (
+	id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	firstName VARCHAR(30) NOT NULL,
+	lastName VARCHAR(30) NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	password CHAR(60) NOT NULL
+);
