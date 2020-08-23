@@ -1,5 +1,4 @@
-import data from "./data"
-
+//import data from "./data.js";
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const express = require("express");
@@ -7,6 +6,8 @@ const app = express();
 
 const port = 5000;
 const hostname = "localhost";
+
+let saltRounds = 12;
 
 /* 
  * For the env file, change your user if it is not root
@@ -44,15 +45,16 @@ con.connect(function(error) {
 		console.log("Connected to database!");
 	}
 });
-<<<<<<< HEAD
 
 app.post("/auth", function (req, res) {
     let email = req.body.email;
     let password = req.body.password;
     let sql = "SELECT password FROM users WHERE email = ?";
     
+    // check if the email exists in the database
     con.query(sql, [email], function(error, result) {
     	if (error) {
+            console.log(error);
     		return res.status(500).send();
     	}
 
@@ -60,36 +62,85 @@ app.post("/auth", function (req, res) {
     		return res.status(401).send();
     	}
 
-    	console.log(result);
-    	res.send();
+        let db_password = result[0].password;
+
+        // compare the password to that of in the database
+        bcrypt
+        .compare(password, db_password)
+        .then(function(isSame) {
+            if (isSame) {
+                res.send();
+            }
+            else {
+                res.status(401).send();
+            }
+        })
+        .catch(function(error) {
+            console.log(error);
+            res.status(500).send();
+        });
     });
-        // .then(function (response) {
-        //     if (response.rows.length === 0) {
-        //         // username doesn't exist
-        //         return res.status(401).send();
-        //     }
-        //     let hashedPassword = response.rows[0].hashed_password;
-        //     bcrypt
-        //         .compare(plaintextPassword, hashedPassword)
-        //         .then(function (isSame) {
-        //             if (isSame) {
-        //                 // password matched
-        //                 res.status(200).send();
-        //             } else {
-        //                 // password didn't match
-        //                 res.status(401).send();
-        //             }
-        //         })
-        //         .catch(function (error) {
-        //             console.log(error);
-        //             res.status(500).send(); // server error
-        //         });
-        // })
 });
 
-=======
+app.post("/addUser", function (req, res) {
+    let email = req.body.email;
+    let password = req.body.password;
+    let firstName = req.body.firstName;
+    let lastName = req.body.lastName;
 
->>>>>>> ff9b81f079aee4160cb2738cfc7b0a8f53d705f4
+    // check inputs
+    if (
+        !req.body.hasOwnProperty("email") ||
+        !req.body.hasOwnProperty("password") ||
+        !req.body.hasOwnProperty("firstName") ||
+        !req.body.hasOwnProperty("lastName") ||
+        typeof email !== "string" ||
+        typeof password !== "string" ||
+        typeof firstName !== "string" ||
+        typeof lastName !== "string" ||
+        email.length < 3 ||
+        password.length < 8 ||
+        firstName.length < 1 ||
+        lastName.length < 1
+    ) {
+        res.status(401).send();
+    }
+
+    let sql = "SELECT username FROM users WHERE username = ?";
+
+    // check if email already exists in the database
+    con.query(sql, [email], function(error, result) {
+        if (error) {
+            console.log(error);
+            return res.status(500).send();
+        }
+
+        if (result.length > 0) {
+            return res.status(401).send();
+        }
+
+        bcrypt
+        .hash(password, saltRounds)
+        .then(function(hashedPassword) {
+            sql = "INSERT INTO users SET firstName = ?, lastName = ?, email = ?, password = ?";
+
+            con.query(sql, [firstName, lastName, email, hashedPassword], function(error, result) {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send();
+                }
+                else {
+                    res.send();
+                }
+            });
+        });
+        .catch(function(error) {
+            console.log(error);
+            res.status(500).send();
+        });
+    });
+});
+
 app.listen(port, hostname, () => {
     console.log(`Listening at: http://${hostname}:${port}`);
 });

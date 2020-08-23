@@ -3,7 +3,6 @@ html{
     box-sizing: border-box;
 }
 
-<<<<<<< HEAD
 select.form-control,
 textarea.form-control,
 input.form-control {
@@ -17,13 +16,14 @@ input[type=file] {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-=======
-body{
+}
+
+body {
     font:1.6rem Helvetica;
     height: 100vh;
     margin:0;
->>>>>>> ff9b81f079aee4160cb2738cfc7b0a8f53d705f4
 }
+
 #root{
     height:100%;
 }
