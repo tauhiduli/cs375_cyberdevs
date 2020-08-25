@@ -1,4 +1,5 @@
-//import data from "./data.js";
+import data from "./data.js";
+
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const express = require("express");
@@ -38,7 +39,6 @@ const con = mysql.createConnection({
 
 con.connect(function(error) {
 	if (error) {
-		console.log("asdfasdfadadf")
 		console.log("Error: ", error);
 	}
 	else {
@@ -133,7 +133,7 @@ app.post("/addUser", function (req, res) {
                     res.send();
                 }
             });
-        });
+        })
         .catch(function(error) {
             console.log(error);
             res.status(500).send();
