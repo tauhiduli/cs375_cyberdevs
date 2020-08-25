@@ -1,5 +1,4 @@
 import data from "./data.js";
-
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const express = require("express");
@@ -39,7 +38,7 @@ const con = mysql.createConnection({
 
 con.connect(function(error) {
 	if (error) {
-		console.log("Error: ", error);
+        console.log("Error: ", error);
 	}
 	else {
 		console.log("Connected to database!");
@@ -47,6 +46,7 @@ con.connect(function(error) {
 });
 
 app.post("/auth", function (req, res) {
+    
     let email = req.body.email;
     let password = req.body.password;
     let sql = "SELECT password FROM users WHERE email = ?";

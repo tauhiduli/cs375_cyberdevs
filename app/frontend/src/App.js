@@ -4,8 +4,13 @@ import HomeScreen from "./screens/homeScreen"
 import ProductScreen from "./screens/productScreen"
 import CartScreen from "./screens/cartScreen"
 import {BrowserRouter,Route, Link} from 'react-router-dom'
+import SigninScreen from './screens/SigninScreen';
+import { useSelector } from 'react-redux'
 function App() {
-  return (
+    const userSignin = useSelector(state => state.userSignin)
+    const userInfo = userSignin
+    console.log(userInfo.userInfo)
+    return (
     <BrowserRouter>
     <div className="grid-container">
       <div className="header_0">
@@ -34,7 +39,7 @@ function App() {
       </header>
       <div className="utility">
           <div id="signin" className="utility-items">
-              <a href="">Sign-in</a>
+          <Link to="/signin">Sign-in</Link>
           </div>
           <div id="search" className="utility-items">
               <a href="">Search</a>
@@ -50,7 +55,7 @@ function App() {
             <Route path="/cart/:id?" component={CartScreen}/>
             <Route path="/product/:id" component={ProductScreen}/>
             <Route path="/" exact={true} component={HomeScreen}/>
-              
+            <Route path="/signin" component={SigninScreen}/>
           </div>
       </main>
       <footer className="footer">
