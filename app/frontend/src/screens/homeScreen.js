@@ -5,6 +5,19 @@ import {useSelector, useDispatch} from 'react-redux'
 import { listProducts } from '../actions/productActions';
 
 function HomeScreen (props){
+    /*
+    const [products, setProduct] = useState([])
+    useEffect(() => {
+        const fetchData = async() => {
+            const {data} = await axios.get("/api/products")
+            setProduct(data)
+        }
+        fetchData()
+        return () => {
+
+        }
+    }, [])
+    */
     const productList=useSelector(state=>state.productList)
     const {products,loading,error} = productList
     const dispatch = useDispatch();

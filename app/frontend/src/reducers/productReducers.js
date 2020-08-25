@@ -1,3 +1,5 @@
+
+
 import { PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS, PRODUCT_LIST_FAIL,PRODUCT_DETAILS_FAIL,PRODUCT_DETAILS_REQUEST,PRODUCT_DETAILS_SUCCESS } from "../constants/productConstants";
 
 function productListReducer(state={products:[]},action){
@@ -26,3 +28,4 @@ function productDetailsReducer(state={product:{}},action){
     }
 }
 export {productListReducer,productDetailsReducer}
+

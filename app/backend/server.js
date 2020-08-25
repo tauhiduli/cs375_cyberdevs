@@ -1,4 +1,5 @@
 import data from "./data.js";
+import jwt from 'jwt-simple'
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const express = require("express");
@@ -28,7 +29,7 @@ app.get("/api/products/:id",(req,res)=>{
 
 const env = require("../env.json");
 app.use(express.json());
-
+/*
 const con = mysql.createConnection({
 	host: env.host,
 	user: env.user,
@@ -44,9 +45,22 @@ con.connect(function(error) {
 		console.log("Connected to database!");
 	}
 });
-
+*/
 app.post("/auth", function (req, res) {
-    
+    let curEmail='tungphi@drexel.edu';
+    let curPassword='123456';
+    let email=req.body.email;
+    let password=req.body.password
+    let payload={username:email}
+    if (password === curPassword){
+        res.send({
+            email:email,
+            name:'Tung'
+        })
+    }else{
+        res.status(401).send({msg:'Invalid Email or Password'})
+    }
+    /*
     let email = req.body.email;
     let password = req.body.password;
     let sql = "SELECT password FROM users WHERE email = ?";
@@ -79,10 +93,14 @@ app.post("/auth", function (req, res) {
             console.log(error);
             res.status(500).send();
         });
-    });
+    });*/
 });
 
 app.post("/addUser", function (req, res) {
+    console.log(req.body.name)
+    console.log(req.body.email)
+    console.log(req.body.password)
+    /*
     let email = req.body.email;
     let password = req.body.password;
     let firstName = req.body.firstName;
@@ -139,6 +157,7 @@ app.post("/addUser", function (req, res) {
             res.status(500).send();
         });
     });
+    */
 });
 
 app.listen(port, hostname, () => {
