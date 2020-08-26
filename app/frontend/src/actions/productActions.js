@@ -1,30 +1,29 @@
 
+var axios=require('axios')
+const { ITEMS_REQUEST, 
+  ITEMS_SUCCESS, 
+  ITEMS_FAIL , 
+  ITEMS_DESC_REQUEST,
+  ITEMS_DESC_SUCCESS,
+  ITEMS_DESC_FAIL} = require("../constants/productConstants")
 
-import axios from 'axios'
-const { PRODUCT_LIST_REQUEST, 
-  PRODUCT_LIST_SUCCESS, 
-  PRODUCT_LIST_FAIL , 
-  PRODUCT_DETAILS_REQUEST,
-  PRODUCT_DETAILS_SUCCESS,
-  PRODUCT_DETAILS_FAIL} = require("../constants/productConstants")
-
-const listProducts = () => async (dispatch) => {
+const productItems = () => async (dispatch) => {
     try {
-      dispatch({ type: PRODUCT_LIST_REQUEST });
+      dispatch({ type: ITEMS_REQUEST });
       const { data } = await axios.get("/api/products");
-      dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
+      dispatch({ type: ITEMS_SUCCESS, payload: data });
     } catch (error) {
-      dispatch({ type: PRODUCT_LIST_FAIL, payload: error.message });
+      dispatch({ type: ITEMS_FAIL, payload: error.message });
     }
   };
 
-const detailsProduct = (productId) => async (dispatch) => {
+const itemDescription = (productId) => async (dispatch) => {
   try{
-    dispatch({type: PRODUCT_DETAILS_REQUEST , payload: productId})
+    dispatch({type: ITEMS_DESC_REQUEST , payload: productId})
     const {data} = await axios.get("/api/products/" + productId)
-    dispatch({type:PRODUCT_DETAILS_SUCCESS,payload:data})
+    dispatch({type:ITEMS_DESC_SUCCESS,payload:data})
   }catch (error){
-    dispatch({type:PRODUCT_DETAILS_FAIL,payload: error.message})
+    dispatch({type:ITEMS_DESC_FAIL,payload: error.message})
   }
 }
-export { listProducts,detailsProduct }
+export { productItems,itemDescription }

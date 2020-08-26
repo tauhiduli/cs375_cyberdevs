@@ -1,30 +1,28 @@
-import {USER_SIGNIN_FAIL, USER_SIGNIN_REQUEST, USER_SIGNIN_SUCCESS, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_REGISTER_FAIL} from "../constants/userConstants"
+import {LOGIN_FAIL, LOGIN_REQUEST, LOGIN_SUCCESS, REG_REQUEST, REG_SUCCESS, REG_FAIL} from "../constants/userConstants"
 
 
-function userSigninReducer(state={},action){
-    switch (action.type){
-        case USER_SIGNIN_REQUEST:
-            return {loading:true}
-        case USER_SIGNIN_SUCCESS:
-            return {loading:false,userInfo:action.payload}
-        case USER_SIGNIN_FAIL:
-            return {loading:false,error:action.payload}
-        default:
-            return state
+function LoginReducer(state={},action){
+    if (action.type === LOGIN_REQUEST){
+        return {loading:true}
+    }else if (action.type === LOGIN_SUCCESS){
+        return {loading:false,userInfo:action.payload}
+    }else if (action.type === LOGIN_FAIL){
+        return {loading:false,error:action.payload}
+    }else{
+        return state
     }
 }
 
-function userRegisterReducer(state={},action){
-    switch (action.type){
-        case USER_REGISTER_REQUEST:
-            return {loading:true}
-        case USER_REGISTER_SUCCESS:
-            return {loading:false,userInfo:action.payload}
-        case USER_REGISTER_FAIL:
-            return {loading:false,error:action.payload}
-        default:
-            return state
+function RegReducer(state={},action){
+    if(action.type === REG_REQUEST){
+        return {loading:true}
+    }else if (action.type === REG_SUCCESS){
+        return {loading:false,userInfo:action.payload}
+    }else if (action.type === REG_FAIL){
+        return {loading:false,error:action.payload}
+    }else{
+        return state
     }
 }
 
-export {userSigninReducer,userRegisterReducer}
+export {LoginReducer,RegReducer}

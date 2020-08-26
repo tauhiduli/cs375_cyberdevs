@@ -1,26 +1,32 @@
-import Axios from 'axios'
-import Cookie from 'js-cookie'
-import {CART_ADD_ITEM, CART_REMOVE_ITEM} from "../constants/cartConstants"
-
-const addToCart = (productID,qty) => async (dispatch,getState) => {
+import {PUT_ITEM_IN, PUT_ITEM_OUT} from "../constants/cartConstants"
+var Axios = require('axios')
+var Cookie = require('js-cookie')
+const putItemIn = (item_inf,qty) => async (dispatch,getState) => {
     try{
-        const {data} = await Axios.get("/api/products/" +productID)
-        dispatch({type: CART_ADD_ITEM,payload:{
-            product: data._id,
-            name:data.name,
-            price:data.price,
-            image:data.image,
+        const URL = "/api/products/"
+        const {data} = await Axios.get(URL +item_inf)
+        const p_id = data['_id']
+        const p_name = data['name']
+        const p_price = data['price']
+        const p_img = data['image']
+        dispatch({type: PUT_ITEM_IN,payload:{
+            product: p_id,
+            name:p_name,
+            price:p_price,
+            image:p_img,
             qty
         }})
         const {cart:{cartItems}} = getState()
-        Cookie.set("cartItems",JSON.stringify(cartItems))
+        const JStoSTR = JSON.stringify(cartItems)
+        Cookie.set("cartItems",JStoSTR)
     }catch (error){
 
     }
 }
-const removeFromCart = (productId) => (dispatch,getState) => {
-    dispatch({type: CART_REMOVE_ITEM,payload:productId})
+const takeItemOut = (item_inf) => (dispatch,getState) => {
+    dispatch({type: PUT_ITEM_OUT,payload:item_inf})
     const {cart:{cartItems}} = getState()
-    Cookie.set("cartItems",JSON.stringify(cartItems))
+    const JStoSTR = JSON.stringify(cartItems)
+    Cookie.set("cartItems",JStoSTR)
 }
-export {addToCart, removeFromCart}
+export {putItemIn, takeItemOut}

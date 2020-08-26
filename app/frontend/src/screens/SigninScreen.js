@@ -1,57 +1,74 @@
 import React, { useEffect, useState } from 'react'
 import {Link} from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
-import { signin } from '../actions/userActions'
+import { loggingIn } from '../actions/userActions'
 
 function SigninScreen (props){
-
-    const [email,setEmail] = useState('')
-    const [password,setPassword] = useState('')
+    const initialStateEmail=''
+    const initialStatePasswd=''
+    const [email,loginWithEmail] = useState(initialStateEmail)
+    const [password,loginWithPassword] = useState(initialStatePasswd)
     const userSignin = useSelector(state=>state.userSignin)
-    const { loading, userInfo, error} = userSignin;
-    const dispatch = useDispatch();
-    
-    useEffect(()=>{
-        if(userInfo){
-            props.history.push("/")
-        }
-        return () => {
-        }
-    }, [userInfo])
+    const d = useDispatch();
+    const u=useEffect;
 
-    const submitHandler = (e) => {
-        e.preventDefault()
-        dispatch(signin(email,password))
+    if(userSignin){
+        console.log('Good')
+    }else{
+        console.log('error')
+    }
+    
+    u(()=>{
+        if(userSignin['userInfo']){
+            let x = props.history
+            x.push("/")}
+        return () => {}}, [userSignin['userInfo']])
+    
+    const submitHandler = (event) => {
+        event.preventDefault()
+        d(loggingIn(email,password))
     }
 
     return (
-        <div className="form">
-            <form onSubmit={submitHandler}>
-                <ul className="form-container">
-                    <li>
-                        <h2>Signin</h2>
-                    </li>
+        <div id="signin-panel" className="div-wrapper">
+            <form id="my-form" onSubmit={submitHandler}>
+                <ul id="signin-panel-wrapper">
+                    <div className="wrapper">
+                        <li>
+                            <div className="wrapper">
+                                <h2>Signin</h2>
+                            </div>
+                        </li>
+                    </div>
 
                     <li>
-                        <label htmlFor="email">
-                            Email
-                        </label>
-                        <input type="email" name="email" id="email" onChange={(e)=>setEmail(e.target.value)}>
-                        </input>
+                        <div className="wrapper">
+                            <a>Email</a>
+                            <input type="email" id="email" onChange={(e)=>loginWithEmail(e.target.value)}>
+                            </input>
+                        </div>
                     </li>
                     <li>
-                        <label htmlFor="password">Password</label>
-                        <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)}>                            
-                        </input>
+                        <div className="wrapper">
+                            <a>Password</a>
+                            <input type="password" id="password" onChange={(e) => loginWithPassword(e.target.value)}>                            
+                            </input>
+                        </div>
                     </li>
                     <li>
-                        <button type="submit" className="button primary"> Signin</button>
+                        <div className="wrapper">
+                            <button type="submit" className="button primary"> Signin</button>
+                        </div>
                     </li>
                     <li>
-                        Create your account
+                        <div className="wrapper">
+                            Create your account
+                        </div>
                     </li>
                     <li>
+                        <div className="wrapper">
                         <Link to="/register" className="button text-center">Register</Link>
+                        </div>
                     </li>
                 </ul>
             </form>

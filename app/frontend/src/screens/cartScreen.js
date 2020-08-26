@@ -1,33 +1,63 @@
 import React, { useEffect } from 'react'
-import {addToCart, removeFromCart} from '../actions/cartActions'
+import {putItemIn, takeItemOut} from '../actions/cartActions'
 import { useDispatch, useSelector } from 'react-redux'
 import {Link} from 'react-router-dom'
+
+function getTotalNumberOfItems(array){
+    let res=0
+    for (let i=0;i<array.length;i++){
+        let cur = array[i]
+        res += cur['qty']
+    }
+    return res
+}
+
+function getTotalPrice(array){
+    let res=0
+    for (let i=0;i<array.length;i++){
+        let cur = array[i]
+        res += (cur['qty'] * cur['price'])
+    }
+    return res
+}
+
 function CartScreen(props){
+    const cart = useSelector(state => state.cart);
+    const products = cart['cartItems']
+    const URL = "/"
+    console.log(products)
+    const item_number = props.match.params.id;
+    let num
+    if (props.location.search){
+        num = props.location.search.split("=")
+        num = num[1]
+        num=Number(num)
+    }else{
+        num = 1
+    }
+    const numOfItems=num
+    const d=useDispatch()
+    const u=useEffect;
 
     
-    const cart = useSelector(state => state.cart);
-    const {cartItems} = cart;
-
-    const productId = props.match.params.id;
-    const qty=props.location.search ? Number(props.location.search.split("=")[1]) : 1;
-    const dispatch=useDispatch()
-    const removeFromCartHandler = (productId) => {
-        dispatch(removeFromCart(productId))
+    const takeItemOutHandler = (item_number) => {
+        d(takeItemOut(item_number))
     }
-    useEffect(()=>{
-        if(productId){
-            dispatch(addToCart(productId,qty))
+    u(()=>{
+        if(item_number){
+            d(putItemIn(item_number,numOfItems))
         }
     },[])
 
     const checkoutHandler = () => {
-        props.history.push("/signin?redirect=shipping")
+        let x = props.history
+        x.push(URL)
     }
 
     return (
-        <div className="cart">
-            <div className="cart-list">
-                <ul className="cart-list-container">
+        <div id="basket">
+            <div id="basket-items">
+                <ul id="basket-wrapper">
                     <li>
                         <h3>
                             Shopping Cart
@@ -37,49 +67,51 @@ function CartScreen(props){
                         </div>
                     </li>
                     {
-                        cartItems.length === 0 ? 
+                        products.length === 0 ? 
                         <div>
                             Cart is empty
                         </div> 
                         :
-                        cartItems.map( item => 
+                        products.map( function(product){
+                            return (
                             <li>
                                 <div className="cart-image">
-                                    <img src={item.image} alt="product"/>
+                                    <img src={product.image} alt="product"/>
                                 </div>
                                 <div className="cart-name">
                                     <div>
-                                        <Link to={"/product/"+item.product}>
-                                            {item.name}
+                                        <Link to={"/product/"+product.product}>
+                                            {product.name}
                                         </Link>
                                     </div>
                                     <div>
                                         Qty:
-                                        <select value={item.qty} onChange={(e) => dispatch(addToCart(item.product,e.target.value))}>
+                                        <select value={product.qty} onChange={(e) => d(putItemIn(product.product,e.target.value))}>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
                                         </select>
-                                        <button className="button cart-delete-button" type="button" onClick={() => removeFromCartHandler(item.product)}>
+                                        <button className="button cart-delete-button" type="button" onClick={() => takeItemOutHandler(product.product)}>
                                             Delete
                                         </button>
                                     </div>
                                 </div>
                                 <div className="cart-price">
-                                    ${item.price}
+                                    ${product.price}
                                 </div>
                             </li>
-                            )
+                            )}
+                        )
                     }
                 </ul>
             </div>
-            <div className="cart-action">
+            <div id="basket-perform">
                 <h3>
-                    Subtotal ( {cartItems.reduce((a,c)=>a + c.qty,0)} items )
+                    Subtotal ( {getTotalNumberOfItems(products)} items )
                     :
-                     $ {cartItems.reduce((a,c) => a + c.price*c.qty, 0)}
+                     $ {getTotalPrice(products)}
                 </h3>
-                <button onClick={checkoutHandler} className="button primary full-width" disabled={cartItems.length === 0}>
+                <button onClick={checkoutHandler} className="button primary full-width" disabled={products.length === 0}>
                     Proceed to Checkout
                 </button>
             </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import HomeScreen from "./screens/homeScreen"
+import HomePage from "./screens/homePage"
 import ProductScreen from "./screens/productScreen"
 import CartScreen from "./screens/cartScreen"
 import {BrowserRouter,Route, Link} from 'react-router-dom'
@@ -9,16 +9,17 @@ import { useSelector } from 'react-redux'
 import RegisterScreen from './screens/RegisterScreen';
 function App() {
     const userSignin = useSelector(state => state.userSignin)
-    const {userInfo} = userSignin
+    const userInfo = userSignin['userInfo']
+
     return (
     <BrowserRouter>
-    <div className="grid-container">
-      <div className="header_0">
-          <div id="title">
+    <div className="grid-container div-wrapper" id="div-current-1">
+      <div className="header_0 div-wrapper div-has-content" id="div-current-2">
+          <div id="title" className = "div-wrapper">
             <Link to="/">Welcome to DragonShop</Link>
           </div>
       </div>
-      <div id="picture">
+      <div id="picture" className = "div-wrapper-image">
           <img id="dragon-picture" src="/images/shopping-bag.jpeg" alt="decorate-pic"/>
       </div>
       <header className="header">
@@ -39,12 +40,7 @@ function App() {
       </header>
       <div className="utility">
           <div id="signin" className="utility-items">
-              {
-                  userInfo ? <Link to="/profile">{userInfo.name}</Link>
-                  :
-                  <Link to="/signin">Sign-in</Link>
-              }
-          
+            <Link to={userInfo? "/profile" : "/signin"}>{userInfo?userInfo.name:"Sign-in"}</Link>
           </div>
           <div id="search" className="utility-items">
               <a href="">Search</a>
@@ -59,7 +55,7 @@ function App() {
           <div className="content">
             <Route path="/cart/:id?" component={CartScreen}/>
             <Route path="/product/:id" component={ProductScreen}/>
-            <Route path="/" exact={true} component={HomeScreen}/>
+            <Route path="/" exact={true} component={HomePage}/>
             <Route path="/signin" component={SigninScreen}/>
             <Route path="/register" component={RegisterScreen}/>
           </div>

@@ -1,60 +1,62 @@
 import React, { useEffect, useState } from 'react'
 import {Link} from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
-
-
-import { detailsProduct } from '../actions/productActions';
-
+import { itemDescription } from '../actions/productActions';
 function ProductScreen (props){
-    const [qty,setQty] = useState(1);
-    const productDetails = useSelector(state => state.productDetails)
-    const {product,loading,error} = productDetails;
-    const dispatch = useDispatch();
-    
-    useEffect(()=>{
-        dispatch(detailsProduct(props.match.params.id))
+    const initialState = 1
+    const id=props.match.params.id;
+    const [numberOfItems,setNumberOfItems] = useState(initialState);
+    const itemsDesc = useSelector(state => state.productDetails)
+    const product=itemsDesc['product']
+    const notDone = itemsDesc['loading']
+    const d = useDispatch()
+    const u=useEffect
+    u(()=>{
+        
+        d(itemDescription(id))
         return () => {
         }
     }, [])
 
-    const handleAddToCart = () => {
-        props.history.push("/cart/"+props.match.params.id+"?qty="+qty)
+    const putItems = () => {
+        let x = props.history
+        x.push("/cart/"+props.match.params.id+"?qty="+numberOfItems)
     }
-
+    
     return (
         <div>
-            <div id="back-to-home">
+            <div id="return-home">
                 <Link to="/">Back to homepage</Link>
             </div>
-            {loading ? <div>Loading...</div> : error ? <div> {error} </div> : (
-                <div className="details">
-                <div className="details-image">
-                    <img src={product.image} alt="product-details"/>
+            
+                <div id="desc">
+                <div id="desc-img">
+                    <img src={notDone ? "" : product.image} alt="product-details"/>
                 </div>
 
-                <div className="details-info">
+                <div id="desc-inf">
                     <ul>
                         <li>
                             <h4>
-                                {product.name}
+                                {notDone ? "" : product.name}
                             </h4>
                         </li>
                         <li>
-                            Price: <b>${product.price}</b>
+                            Price: <b>${notDone ? "" : product.price}</b>
                         </li>
                     </ul>
                 </div>
-                <div className="details-action">
+                <div id="desc-perform">
                     <ul>
                         <li>
-                            Price: {product.price}
+                            Price: ${notDone ? "" : product.price}
                         </li>
                         <li>
-                            Status: {product.status}
+                            Status: {notDone ? "" : product.status}
                         </li>
                         <li>
                             Qty:
-                            <select value={qty} onChange={(e) => {setQty(e.target.value)}}>
+                            <select value={numberOfItems} onChange={(event) => {setNumberOfItems(event.target.value)}}>
                                 <option>1</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -63,12 +65,12 @@ function ProductScreen (props){
                             </select>
                         </li>
                         <li>
-                            <button onClick={handleAddToCart} className="button primary"> Add to cart</button>
+                            <button onClick={putItems} className="button primary"> Add to cart</button>
                         </li>
                     </ul>
                 </div>
             </div>
-            )}
+            
             
         </div>
     )
