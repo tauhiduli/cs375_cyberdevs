@@ -13,10 +13,10 @@ const loggingIn = (email,password) => async (dispatch) => {
     }
 }
 
-const regFunc = (name, email,password) => async (dispatch) => {
-    dispatch({type:REG_REQUEST,payload:{name,email,password}})
+const regFunc = (firstName,lastName,username,email,password) => async (dispatch) => {
+    dispatch({type:REG_REQUEST,payload:{firstName,lastName,username,email,password}})
     try{
-        const {data} = await Axios.post("/addUser",{name,email,password})
+        const {data} = await Axios.post("/addUser",{firstName,lastName,username,email,password})
         dispatch({type:REG_SUCCESS,payload:data})
         Cookie.set('userInfo',JSON.stringify(data))
     }catch (error){

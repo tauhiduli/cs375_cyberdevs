@@ -29,7 +29,7 @@ app.get("/api/products/:id",(req,res)=>{
 
 const env = require("../env.json");
 app.use(express.json());
-/*
+
 const con = mysql.createConnection({
 	host: env.host,
 	user: env.user,
@@ -45,9 +45,10 @@ con.connect(function(error) {
 		console.log("Connected to database!");
 	}
 });
-*/
+
+// Checks if the user is exists and validates their credentials
 app.post("/auth", function (req, res) {
-    let curEmail='tungphi@drexel.edu';
+    /*let curEmail='tungphi@drexel.edu';
     let curPassword='123456';
     let email=req.body.email;
     let password=req.body.password
@@ -59,11 +60,13 @@ app.post("/auth", function (req, res) {
         })
     }else{
         res.status(401).send({msg:'Invalid Email or Password'})
-    }
-    /*
+    }*/
     let email = req.body.email;
     let password = req.body.password;
-    let sql = "SELECT password FROM users WHERE email = ?";
+    console.log(email, password);
+    let sql = "SELECT * FROM users WHERE email = ?";
+    // This will be sent back if the email or password is wrong
+    let error401Msg = {msg: "Invalid Email or Password!"}
     
     // check if the email exists in the database
     con.query(sql, [email], function(error, result) {
@@ -72,84 +75,143 @@ app.post("/auth", function (req, res) {
     		return res.status(500).send();
     	}
 
-    	if (result.length === 0) {
-    		return res.status(401).send();
+    	if (result.length === 0) { // check if the email does not match in the database
+            console.log("User Does Not Exist!");
+    		return res.status(401).send(error401Msg);
     	}
 
-        let db_password = result[0].password;
+        // Set some vars containing data that will be returned or checked later
+        let r = result[0];
+        let db_email = r.email;
+        let db_password = r.password;
+        let db_firstName = r.firstName;
+        let db_lastName = r.lastName;
+        let db_username = r.username;
 
         // compare the password to that of in the database
         bcrypt
         .compare(password, db_password)
         .then(function(isSame) {
             if (isSame) {
-                res.send();
+                console.log("It's good");
+                res.send({email: db_email, firstName: db_firstName, lastName: db_lastName, username: db_username});
             }
             else {
-                res.status(401).send();
+                console.log("Not good");
+                res.status(401).send(error401Msg);
             }
         })
         .catch(function(error) {
             console.log(error);
             res.status(500).send();
         });
-    });*/
+    });
 });
 
-app.post("/addUser", function (req, res) {
-    console.log(req.body.name)
-    console.log(req.body.email)
-    console.log(req.body.password)
-    /*
+// This will add a new user to the database
+app.post("/addUser", function (req, res) {    
     let email = req.body.email;
     let password = req.body.password;
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
+    let username = req.body.username;
+    console.log(email, password, firstName, lastName, username);
 
-    // check inputs
+    // check email input
     if (
         !req.body.hasOwnProperty("email") ||
-        !req.body.hasOwnProperty("password") ||
-        !req.body.hasOwnProperty("firstName") ||
-        !req.body.hasOwnProperty("lastName") ||
         typeof email !== "string" ||
-        typeof password !== "string" ||
-        typeof firstName !== "string" ||
-        typeof lastName !== "string" ||
-        email.length < 3 ||
-        password.length < 8 ||
-        firstName.length < 1 ||
-        lastName.length < 1
+        email.length < 3
     ) {
-        res.status(401).send();
+        console.log("Invalid Email!");
+        return res.status(401).send({msg: "Invalid Email!"});
     }
 
-    let sql = "SELECT username FROM users WHERE username = ?";
+    // check password input
+    if (
+        !req.body.hasOwnProperty("password") ||
+        typeof password !== "string" ||
+        password.length < 8
+    ) {
+        console.log("Invalid Password!");
+        return res.status(401).send({msg: "Invalid Password! Passwords must be at least 8 characters long!"});
+    }
 
-    // check if email already exists in the database
-    con.query(sql, [email], function(error, result) {
+    // check first name input
+    if (
+        !req.body.hasOwnProperty("firstName") ||
+        typeof firstName !== "string" ||
+        firstName.length < 1
+    ) {
+        console.log("Invalid First Name!");
+        return res.status(401).send({msg: "Invalid First Name!"});
+    }
+
+    // check last name input
+    if (
+        !req.body.hasOwnProperty("lastName") ||
+        typeof lastName !== "string" ||
+        lastName.length < 1
+    ) {
+        console.log("Invalid Last Name!");
+        return res.status(401).send({msg: "Invalid Last Name!"});
+    }
+
+    // check username input
+    if (
+        !req.body.hasOwnProperty("username") ||
+        typeof username !== "string" ||
+        username.length < 2
+    ) {
+        console.log("Invalid Username!");
+        return res.status(401).send({msg: "Invalid Username! Username must be at least 2 characters long!"});
+    }
+
+    let sql = "SELECT id, username, email FROM users WHERE email = ? OR username = ?";
+
+    // check if email or username already exists in the database
+    con.query(sql, [email, username], function(error, result) {
         if (error) {
             console.log(error);
             return res.status(500).send();
         }
 
-        if (result.length > 0) {
-            return res.status(401).send();
+        if (result.length > 0) { // check if the database returns rows containing the email or username
+            console.log("Exists!");
+            for (let i=0; i<result.length; i++) { // loop through the rows to see which one exists
+                if (result[i].email === email) { // check if the email exists
+                    console.log("Email Exists!");
+                    return res.status(401).send({msg: "This email already exists! Please sign in instead!"});
+                }
+                else { // otherwise, the username exists
+                    console.log("Username Exists!");
+                    return res.status(401).send({msg: "This username already exists!"});
+                }
+            }
         }
 
         bcrypt
         .hash(password, saltRounds)
         .then(function(hashedPassword) {
-            sql = "INSERT INTO users SET firstName = ?, lastName = ?, email = ?, password = ?";
+            sql = "INSERT INTO users SET firstName = ?, lastName = ?, username = ?, email = ?, password = ?";
 
-            con.query(sql, [firstName, lastName, email, hashedPassword], function(error, result) {
+            // Insert into the database
+            con.query(sql, [firstName, lastName, username, email, hashedPassword], function(error, result) {
                 if (error) {
                     console.log(error);
-                    res.status(500).send();
+                    return res.status(500).send();
                 }
-                else {
-                    res.send();
-                }
+                // Get the inserted row and return the data
+                console.log("Result:", result);
+                sql = "SELECT email, firstName, lastName, username FROM users WHERE id = ?";
+                con.query(sql, [result.insertId], function(error, result) {
+                    if (error) {
+                        console.log(error);
+                        return res.status(500).send();
+                    }
+                    let r = result[0];
+                    res.send({email: r.email, firstName: r.firstName, lastName: r.lastName, username: r.username});
+                });
             });
         })
         .catch(function(error) {
@@ -157,7 +219,7 @@ app.post("/addUser", function (req, res) {
             res.status(500).send();
         });
     });
-    */
+    
 });
 
 app.listen(port, hostname, () => {
