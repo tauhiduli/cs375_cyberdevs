@@ -1,0 +1,84 @@
+body {
+	margin: 2rem;
+	margin-top: 0px;
+
+}
+
+div{
+
+	margin-left: 20%;
+	padding: 5px;
+	width: 40%;
+}
+
+input[type="text"]{
+
+	width: 100%;
+	padding: 5px;
+}
+
+input[type="email"]{
+
+	width: 100%;
+	padding: 5px;
+}
+
+input[type="password"]{
+
+	width: 100%;
+	padding: 5px;
+}
+
+input[type="button"]{
+
+	width: 30%;
+	padding: 5px;
+}
+
+input[type="reset"]{
+
+	width: 30%;
+	padding: 5px;
+}
+
+button{
+
+	width: 40%;
+	margin-left: 5px;
+}
+
+.form {
+	padding: 1rem;
+	margin: 2rem 0;
+	border: 1px solid black;
+	margin-left: 20%;
+}
+.form label {
+	font-weight: bold;
+}
+.form div {
+	margin: 1rem 0;
+}
+
+#message {
+	margin: 1rem 0;
+}
+
+
+#login{
+
+	padding: 4px;
+}
+
+.header{
+
+	text-align: center;
+}
+
+.content{
+
+	width: 60%;
+	border: 1px solid blue;
+
+
+}
