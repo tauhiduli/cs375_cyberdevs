@@ -3,23 +3,30 @@
         <head>
             <meta charset="utf-8">
             <title>Login</title>
+            <link rel="stylesheet" type="text/css" href="stylelogin.css">
             <style type="text/css">
             </style>
         </head>
         <body>
+
+            <div class="content">
+            <div class="header">
             <h1>Login</h1>
-            <form>
+
+            </div>
+            <form class="logform">
                 <div id="login">
                     <p>Username<input type="text" id="userId" name="userId"></p>
                     <p>Password<input type="password" id="password" name="password"></p>
                 </div>
                 <div>
                     <input type="button" id="loginButton" value="Login">
+                    
                     <input type="reset" id="resetButton" value="Reset">
                 </div>
             </form>
-            <script type="text/javascript">
-                function checkLogin() {
+            <script type="text/javascript" src="../src/screens/login.js">
+                /*function checkLogin() {
                     idInput = document.getElementById("userId");
                     passwordInput = document.getElementById("password");
                     let found = false;
@@ -44,6 +51,10 @@
 
                 loginButton = document.getElementById("loginButton");
                 loginButton.addEventListener("click", checkLogin);
+
+                */
             </script>
+
+        </div>
         </body>
     </html>
