@@ -1,5 +1,5 @@
 import data from "./data.js";
-import jwt from 'jwt-simple'
+
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const express = require("express");
@@ -14,6 +14,7 @@ let saltRounds = 12;
  * For the env file, change your user if it is not root
  * and change the password to whatever you set it as.
  */
+
 app.get("/api/products/:id",(req,res)=>{
 	const productId=req.params.id
 	const product = data.products.find(x=>x._id === productId)
@@ -48,22 +49,8 @@ con.connect(function(error) {
 
 // Checks if the user is exists and validates their credentials
 app.post("/auth", function (req, res) {
-    /*let curEmail='tungphi@drexel.edu';
-    let curPassword='123456';
-    let email=req.body.email;
-    let password=req.body.password
-    let payload={username:email}
-    if (password === curPassword){
-        res.send({
-            email:email,
-            name:'Tung'
-        })
-    }else{
-        res.status(401).send({msg:'Invalid Email or Password'})
-    }*/
     let email = req.body.email;
     let password = req.body.password;
-    console.log(email, password);
     let sql = "SELECT * FROM users WHERE email = ?";
     // This will be sent back if the email or password is wrong
     let error401Msg = {msg: "Invalid Email or Password!"}
@@ -94,7 +81,12 @@ app.post("/auth", function (req, res) {
         .then(function(isSame) {
             if (isSame) {
                 console.log("It's good");
-                res.send({email: db_email, firstName: db_firstName, lastName: db_lastName, username: db_username});
+                res.send({
+                    email: db_email, 
+                    firstName: db_firstName, 
+                    lastName: db_lastName, 
+                    username: db_username
+                });
             }
             else {
                 console.log("Not good");
@@ -115,7 +107,6 @@ app.post("/addUser", function (req, res) {
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
     let username = req.body.username;
-    console.log(email, password, firstName, lastName, username);
 
     // check email input
     if (
@@ -202,7 +193,6 @@ app.post("/addUser", function (req, res) {
                     return res.status(500).send();
                 }
                 // Get the inserted row and return the data
-                console.log("Result:", result);
                 sql = "SELECT email, firstName, lastName, username FROM users WHERE id = ?";
                 con.query(sql, [result.insertId], function(error, result) {
                     if (error) {
@@ -210,7 +200,12 @@ app.post("/addUser", function (req, res) {
                         return res.status(500).send();
                     }
                     let r = result[0];
-                    res.send({email: r.email, firstName: r.firstName, lastName: r.lastName, username: r.username});
+                    res.send({
+                        email: r.email, 
+                        firstName: r.firstName, 
+                        lastName: r.lastName, 
+                        username: r.username
+                    });
                 });
             });
         })
