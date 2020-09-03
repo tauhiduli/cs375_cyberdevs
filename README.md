@@ -1,1 +1,2 @@
-This is our project for CS375 where we will create a Drexel e-commerce site.
+- This is our project for CS375 where we will create a Drexel e-commerce site.
+- Citation: the implemented front end is inspired by the following project https://github.com/basir/node-react-ecommerce.

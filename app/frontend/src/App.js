@@ -20,7 +20,11 @@ function App() {
           </div>
       </div>
       <div id="picture" className = "div-wrapper-image">
-          <img id="dragon-picture" src="/images/shopping-bag.jpeg" alt="decorate-pic"/>
+                <Link to="/">
+                   
+                
+          <img id="dragon-picture" src="/images/shopping-bag.png" alt="decorate-pic"/>
+          </Link>
       </div>
       <header className="header">
           <div id="catergory" className="menu-items">
